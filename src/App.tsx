@@ -15,6 +15,10 @@ function App() {
     setShowForm(false)
   }
 
+  const deleteApplication = (id: string) => {
+    setApplications((current) => current.filter((job) => job.id !== id))
+  }
+
   return (
     <main className="page-shell">
       <header className="page-header">
@@ -49,7 +53,12 @@ function App() {
                 <h3>{job.role}</h3>
                 <p>{job.company} · {job.location}</p>
               </div>
-              <span className="status-badge">{job.status}</span>
+              <div className="application-actions">
+                <span className="status-badge">{job.status}</span>
+                <button className="delete-button" type="button" onClick={() => deleteApplication(job.id)}>
+                  Delete
+                </button>
+              </div>
             </article>
           ))}
         </div>

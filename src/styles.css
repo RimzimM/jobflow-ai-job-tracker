@@ -36,7 +36,8 @@ button {
 .page-header,
 .section-heading,
 .application-row,
-.form-heading {
+.form-heading,
+.application-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -188,6 +189,11 @@ h1 {
   font-size: 0.9rem;
 }
 
+.application-actions {
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .status-badge {
   border-radius: 999px;
   padding: 6px 10px;
@@ -195,6 +201,13 @@ h1 {
   color: #4338ca;
   font-size: 0.82rem;
   font-weight: 600;
+}
+
+.delete-button {
+  padding: 6px 8px;
+  background: transparent;
+  color: #9f1239;
+  font-size: 0.82rem;
 }
 
 @media (max-width: 700px) {
