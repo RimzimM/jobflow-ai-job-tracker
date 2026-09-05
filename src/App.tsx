@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import ApplicationForm from './components/ApplicationForm'
 import StatCard from './components/StatCard'
 import { applications as initialApplications } from './data/applications'
@@ -7,8 +7,21 @@ import type { JobApplication } from './types/application'
 function App() {
   const [applications, setApplications] = useState(initialApplications)
   const [showForm, setShowForm] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const appliedCount = applications.filter((job) => job.status === 'Applied').length
   const interviewCount = applications.filter((job) => job.status === 'Interview').length
+
+  const visibleApplications = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase()
+
+    if (!query) return applications
+
+    return applications.filter((job) =>
+      [job.role, job.company, job.location].some((value) =>
+        value.toLowerCase().includes(query),
+      ),
+    )
+  }, [applications, searchTerm])
 
   const addApplication = (application: JobApplication) => {
     setApplications((current) => [application, ...current])
@@ -44,10 +57,19 @@ function App() {
             <h2>Applications</h2>
             <p>Your most recent roles.</p>
           </div>
+          <label className="search-field">
+            <span className="sr-only">Search applications</span>
+            <input
+              type="search"
+              placeholder="Search company, role or location"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </label>
         </div>
 
         <div className="application-list">
-          {applications.map((job) => (
+          {visibleApplications.length > 0 ? visibleApplications.map((job) => (
             <article className="application-row" key={job.id}>
               <div>
                 <h3>{job.role}</h3>
@@ -60,7 +82,9 @@ function App() {
                 </button>
               </div>
             </article>
-          ))}
+          )) : (
+            <p className="empty-state">No applications match your search.</p>
+          )}
         </div>
       </section>
     </main>
