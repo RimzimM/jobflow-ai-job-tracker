@@ -13,4 +13,9 @@ export type JobApplication = {
   status: ApplicationStatus
   appliedAt?: string
   followUpAt?: string
+  jobUrl?: string
+  source?: string
+  contactName?: string
+  contactEmail?: string
+  notes?: string
 }
