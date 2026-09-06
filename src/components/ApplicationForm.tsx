@@ -2,18 +2,20 @@ import { FormEvent, useState } from 'react'
 import type { ApplicationStatus, JobApplication } from '../types/application'
 
 type ApplicationFormProps = {
-  onAdd: (application: JobApplication) => void
+  application?: JobApplication
+  onSave: (application: JobApplication) => void
   onCancel: () => void
 }
 
 const statuses: ApplicationStatus[] = ['Wishlist', 'Applied', 'Interview', 'Offer', 'Closed']
 
-function ApplicationForm({ onAdd, onCancel }: ApplicationFormProps) {
-  const [company, setCompany] = useState('')
-  const [role, setRole] = useState('')
-  const [location, setLocation] = useState('')
-  const [status, setStatus] = useState<ApplicationStatus>('Wishlist')
+function ApplicationForm({ application, onSave, onCancel }: ApplicationFormProps) {
+  const [company, setCompany] = useState(application?.company ?? '')
+  const [role, setRole] = useState(application?.role ?? '')
+  const [location, setLocation] = useState(application?.location === 'Not specified' ? '' : application?.location ?? '')
+  const [status, setStatus] = useState<ApplicationStatus>(application?.status ?? 'Wishlist')
   const [error, setError] = useState('')
+  const isEditing = Boolean(application)
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -23,13 +25,13 @@ function ApplicationForm({ onAdd, onCancel }: ApplicationFormProps) {
       return
     }
 
-    onAdd({
-      id: crypto.randomUUID(),
+    onSave({
+      id: application?.id ?? crypto.randomUUID(),
       company: company.trim(),
       role: role.trim(),
       location: location.trim() || 'Not specified',
       status,
-      appliedAt: status === 'Wishlist' ? undefined : new Date().toISOString().slice(0, 10),
+      appliedAt: application?.appliedAt ?? (status === 'Wishlist' ? undefined : new Date().toISOString().slice(0, 10)),
     })
   }
 
@@ -37,8 +39,8 @@ function ApplicationForm({ onAdd, onCancel }: ApplicationFormProps) {
     <form className="application-form" onSubmit={handleSubmit}>
       <div className="form-heading">
         <div>
-          <h2>Add application</h2>
-          <p>Save a role to your job search.</p>
+          <h2>{isEditing ? 'Edit application' : 'Add application'}</h2>
+          <p>{isEditing ? 'Update the details for this role.' : 'Save a role to your job search.'}</p>
         </div>
         <button className="text-button" type="button" onClick={onCancel}>Cancel</button>
       </div>
@@ -65,7 +67,7 @@ function ApplicationForm({ onAdd, onCancel }: ApplicationFormProps) {
       </div>
 
       {error && <p className="form-error" role="alert">{error}</p>}
-      <button type="submit">Save application</button>
+      <button type="submit">{isEditing ? 'Save changes' : 'Save application'}</button>
     </form>
   )
 }
