@@ -9,6 +9,7 @@ const statusOptions: Array<ApplicationStatus | 'All'> = ['All', 'Wishlist', 'App
 function App() {
   const [applications, setApplications] = useState(initialApplications)
   const [showForm, setShowForm] = useState(false)
+  const [editingApplication, setEditingApplication] = useState<JobApplication | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'All'>('All')
   const appliedCount = applications.filter((job) => job.status === 'Applied').length
@@ -27,9 +28,29 @@ function App() {
     })
   }, [applications, searchTerm, statusFilter])
 
-  const addApplication = (application: JobApplication) => {
-    setApplications((current) => [application, ...current])
+  const openAddForm = () => {
+    setEditingApplication(null)
+    setShowForm(true)
+  }
+
+  const openEditForm = (application: JobApplication) => {
+    setEditingApplication(application)
+    setShowForm(true)
+  }
+
+  const closeForm = () => {
+    setEditingApplication(null)
     setShowForm(false)
+  }
+
+  const saveApplication = (application: JobApplication) => {
+    setApplications((current) => {
+      const exists = current.some((job) => job.id === application.id)
+      return exists
+        ? current.map((job) => job.id === application.id ? application : job)
+        : [application, ...current]
+    })
+    closeForm()
   }
 
   const deleteApplication = (id: string) => {
@@ -44,10 +65,16 @@ function App() {
           <h1>JobFlow</h1>
           <p className="subtitle">Keep applications, interviews and follow-ups in one place.</p>
         </div>
-        <button type="button" onClick={() => setShowForm(true)}>Add application</button>
+        <button type="button" onClick={openAddForm}>Add application</button>
       </header>
 
-      {showForm && <ApplicationForm onAdd={addApplication} onCancel={() => setShowForm(false)} />}
+      {showForm && (
+        <ApplicationForm
+          application={editingApplication ?? undefined}
+          onSave={saveApplication}
+          onCancel={closeForm}
+        />
+      )}
 
       <section className="stats-grid" aria-label="Application summary">
         <StatCard label="Total applications" value={applications.length} />
@@ -92,6 +119,9 @@ function App() {
               </div>
               <div className="application-actions">
                 <span className="status-badge">{job.status}</span>
+                <button className="text-button" type="button" onClick={() => openEditForm(job)}>
+                  Edit
+                </button>
                 <button className="delete-button" type="button" onClick={() => deleteApplication(job.id)}>
                   Delete
                 </button>
