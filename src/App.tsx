@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import ApplicationDetails from './components/ApplicationDetails'
 import ApplicationForm from './components/ApplicationForm'
 import StatCard from './components/StatCard'
 import { applications as initialApplications } from './data/applications'
@@ -10,6 +11,7 @@ function App() {
   const [applications, setApplications] = useState(initialApplications)
   const [showForm, setShowForm] = useState(false)
   const [editingApplication, setEditingApplication] = useState<JobApplication | null>(null)
+  const [selectedApplication, setSelectedApplication] = useState<JobApplication | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'All'>('All')
   const appliedCount = applications.filter((job) => job.status === 'Applied').length
@@ -30,11 +32,13 @@ function App() {
 
   const openAddForm = () => {
     setEditingApplication(null)
+    setSelectedApplication(null)
     setShowForm(true)
   }
 
   const openEditForm = (application: JobApplication) => {
     setEditingApplication(application)
+    setSelectedApplication(null)
     setShowForm(true)
   }
 
@@ -55,6 +59,7 @@ function App() {
 
   const deleteApplication = (id: string) => {
     setApplications((current) => current.filter((job) => job.id !== id))
+    if (selectedApplication?.id === id) setSelectedApplication(null)
   }
 
   return (
@@ -69,10 +74,14 @@ function App() {
       </header>
 
       {showForm && (
-        <ApplicationForm
-          application={editingApplication ?? undefined}
-          onSave={saveApplication}
-          onCancel={closeForm}
+        <ApplicationForm application={editingApplication ?? undefined} onSave={saveApplication} onCancel={closeForm} />
+      )}
+
+      {selectedApplication && !showForm && (
+        <ApplicationDetails
+          application={selectedApplication}
+          onClose={() => setSelectedApplication(null)}
+          onEdit={openEditForm}
         />
       )}
 
@@ -84,26 +93,15 @@ function App() {
 
       <section className="applications-panel">
         <div className="section-heading">
-          <div>
-            <h2>Applications</h2>
-            <p>Your most recent roles.</p>
-          </div>
+          <div><h2>Applications</h2><p>Your most recent roles.</p></div>
           <div className="application-filters">
             <label className="search-field">
               <span className="sr-only">Search applications</span>
-              <input
-                type="search"
-                placeholder="Search company, role or location"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-              />
+              <input type="search" placeholder="Search company, role or location" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
             </label>
             <label>
               <span className="sr-only">Filter by status</span>
-              <select
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value as ApplicationStatus | 'All')}
-              >
+              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as ApplicationStatus | 'All')}>
                 {statusOptions.map((status) => <option key={status}>{status}</option>)}
               </select>
             </label>
@@ -113,23 +111,16 @@ function App() {
         <div className="application-list">
           {visibleApplications.length > 0 ? visibleApplications.map((job) => (
             <article className="application-row" key={job.id}>
-              <div>
-                <h3>{job.role}</h3>
-                <p>{job.company} · {job.location}</p>
-              </div>
+              <button className="application-main" type="button" onClick={() => setSelectedApplication(job)}>
+                <span><strong>{job.role}</strong><small>{job.company} · {job.location}</small></span>
+              </button>
               <div className="application-actions">
                 <span className="status-badge">{job.status}</span>
-                <button className="text-button" type="button" onClick={() => openEditForm(job)}>
-                  Edit
-                </button>
-                <button className="delete-button" type="button" onClick={() => deleteApplication(job.id)}>
-                  Delete
-                </button>
+                <button className="text-button" type="button" onClick={() => openEditForm(job)}>Edit</button>
+                <button className="delete-button" type="button" onClick={() => deleteApplication(job.id)}>Delete</button>
               </div>
             </article>
-          )) : (
-            <p className="empty-state">No applications match these filters.</p>
-          )}
+          )) : <p className="empty-state">No applications match these filters.</p>}
         </div>
       </section>
     </main>
