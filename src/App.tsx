@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import ApplicationDetails from './components/ApplicationDetails'
 import ApplicationForm from './components/ApplicationForm'
+import ApplicationInsights from './components/ApplicationInsights'
 import FollowUpList from './components/FollowUpList'
 import StatCard from './components/StatCard'
 import { applications as initialApplications } from './data/applications'
@@ -60,6 +61,7 @@ function App() {
         <StatCard label="Interviews" value={interviewCount} />
       </section>
 
+      <ApplicationInsights applications={applications} />
       <FollowUpList applications={applications} onSelect={setSelectedApplication} />
 
       <section className="applications-panel">
