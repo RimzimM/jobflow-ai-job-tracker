@@ -1,15 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ApplicationDetails from './components/ApplicationDetails'
 import ApplicationForm from './components/ApplicationForm'
 import FollowUpList from './components/FollowUpList'
 import StatCard from './components/StatCard'
 import { applications as initialApplications } from './data/applications'
 import type { ApplicationStatus, JobApplication } from './types/application'
+import { loadStoredApplications, saveStoredApplications } from './utils/storage'
 
 const statusOptions: Array<ApplicationStatus | 'All'> = ['All', 'Wishlist', 'Applied', 'Interview', 'Offer', 'Closed']
 
 function App() {
-  const [applications, setApplications] = useState(initialApplications)
+  const [applications, setApplications] = useState<JobApplication[]>(() => loadStoredApplications(initialApplications))
   const [showForm, setShowForm] = useState(false)
   const [editingApplication, setEditingApplication] = useState<JobApplication | null>(null)
   const [selectedApplication, setSelectedApplication] = useState<JobApplication | null>(null)
@@ -17,6 +18,10 @@ function App() {
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'All'>('All')
   const appliedCount = applications.filter((job) => job.status === 'Applied').length
   const interviewCount = applications.filter((job) => job.status === 'Interview').length
+
+  useEffect(() => {
+    saveStoredApplications(applications)
+  }, [applications])
 
   const visibleApplications = useMemo(() => {
     const query = searchTerm.trim().toLowerCase()
