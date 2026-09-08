@@ -30,10 +30,17 @@ h1 { margin-bottom: 8px; font-size: clamp(2rem, 5vw, 3rem); }
 .details-actions { justify-content: flex-start; margin-top: 18px; }
 .details-actions a { color: #4338ca; font-weight: 600; text-decoration: none; }
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-.stat-card, .applications-panel, .follow-up-panel { border: 1px solid #e5e7eb; border-radius: 16px; background: white; }
+.stat-card, .applications-panel, .follow-up-panel, .insights-panel { border: 1px solid #e5e7eb; border-radius: 16px; background: white; }
 .stat-card { padding: 20px; }
 .stat-card span { display: block; margin-bottom: 10px; color: #6b7280; }
 .stat-card strong { font-size: 1.8rem; }
+.insights-panel { margin-bottom: 24px; padding: 24px; }
+.insights-panel .section-heading p { margin-bottom: 0; }
+.insights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; }
+.insight-card { padding: 18px; border-radius: 12px; background: #f9fafb; }
+.insight-card span, .insight-card small { display: block; color: #6b7280; }
+.insight-card strong { display: block; margin: 8px 0 5px; font-size: 1.45rem; }
+.insight-card small { line-height: 1.4; }
 .follow-up-panel { margin-bottom: 24px; padding: 24px; }
 .follow-up-panel .section-heading p { margin-bottom: 0; }
 .follow-up-list { margin-top: 16px; border-top: 1px solid #e5e7eb; }
@@ -60,7 +67,7 @@ h1 { margin-bottom: 8px; font-size: clamp(2rem, 5vw, 3rem); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-width: 700px) {
   .page-header, .section-heading { align-items: flex-start; flex-direction: column; }
-  .stats-grid, .form-grid, .details-grid { grid-template-columns: 1fr; }
+  .stats-grid, .form-grid, .details-grid, .insights-grid { grid-template-columns: 1fr; }
   .application-filters { width: 100%; flex-direction: column; }
   .application-filters input, .application-filters select { width: 100%; }
   .application-row { align-items: flex-start; }
