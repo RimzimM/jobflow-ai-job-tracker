@@ -3,6 +3,7 @@ import ApplicationDetails from './components/ApplicationDetails'
 import ApplicationForm from './components/ApplicationForm'
 import ApplicationInsights from './components/ApplicationInsights'
 import FollowUpList from './components/FollowUpList'
+import JobMatchAnalyzer from './components/JobMatchAnalyzer'
 import StatCard from './components/StatCard'
 import { applications as initialApplications } from './data/applications'
 import type { ApplicationStatus, JobApplication } from './types/application'
@@ -63,6 +64,7 @@ function App() {
 
       <ApplicationInsights applications={applications} />
       <FollowUpList applications={applications} onSelect={setSelectedApplication} />
+      <JobMatchAnalyzer />
 
       <section className="applications-panel">
         <div className="section-heading">
