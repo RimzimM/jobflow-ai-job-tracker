@@ -36,11 +36,19 @@ h1 { margin-bottom: 8px; font-size: clamp(2rem, 5vw, 3rem); }
 .stat-card strong { font-size: 1.8rem; }
 .insights-panel { margin-bottom: 24px; padding: 24px; }
 .insights-panel .section-heading p { margin-bottom: 0; }
-.insights-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; }
+.insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
 .insight-card { padding: 18px; border-radius: 12px; background: #f9fafb; }
 .insight-card span, .insight-card small { display: block; color: #6b7280; }
 .insight-card strong { display: block; margin: 8px 0 5px; font-size: 1.45rem; }
 .insight-card small { line-height: 1.4; }
+.status-breakdown { margin-top: 22px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+.status-breakdown h3 { margin-bottom: 14px; font-size: .95rem; }
+.status-breakdown-list { display: grid; gap: 12px; }
+.status-breakdown-row { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 14px; }
+.status-breakdown-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #4b5563; font-size: .85rem; }
+.status-breakdown-label strong { color: #1f2937; }
+.status-track { height: 8px; overflow: hidden; border-radius: 999px; background: #eef2f7; }
+.status-track span { display: block; min-width: 2px; height: 100%; border-radius: inherit; background: #4f46e5; }
 .follow-up-panel { margin-bottom: 24px; padding: 24px; }
 .follow-up-panel .section-heading p { margin-bottom: 0; }
 .follow-up-list { margin-top: 16px; border-top: 1px solid #e5e7eb; }
@@ -68,6 +76,7 @@ h1 { margin-bottom: 8px; font-size: clamp(2rem, 5vw, 3rem); }
 @media (max-width: 700px) {
   .page-header, .section-heading { align-items: flex-start; flex-direction: column; }
   .stats-grid, .form-grid, .details-grid, .insights-grid { grid-template-columns: 1fr; }
+  .status-breakdown-row { grid-template-columns: 1fr; gap: 6px; }
   .application-filters { width: 100%; flex-direction: column; }
   .application-filters input, .application-filters select { width: 100%; }
   .application-row { align-items: flex-start; }
