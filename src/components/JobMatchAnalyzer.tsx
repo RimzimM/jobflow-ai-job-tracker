@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-const skillGroups = [
+const trackedSkills = [
   ['react', 'React'],
   ['typescript', 'TypeScript'],
   ['javascript', 'JavaScript'],
@@ -13,16 +13,19 @@ const skillGroups = [
   ['git', 'Git'],
 ] as const
 
+const profileSkills = new Set(['react', 'typescript', 'javascript', 'redux', 'vue', 'html', 'css', 'accessibility', 'responsive', 'git'])
+
 function JobMatchAnalyzer() {
   const [description, setDescription] = useState('')
 
   const analysis = useMemo(() => {
     const text = description.toLowerCase()
-    const mentioned = skillGroups.filter(([keyword]) => text.includes(keyword))
-    const matched = mentioned.filter(([keyword]) => ['react', 'typescript', 'javascript', 'redux', 'vue', 'html', 'css', 'accessibility', 'responsive', 'git'].includes(keyword))
+    const mentioned = trackedSkills.filter(([keyword]) => text.includes(keyword))
+    const matched = mentioned.filter(([keyword]) => profileSkills.has(keyword))
+    const missing = mentioned.filter(([keyword]) => !profileSkills.has(keyword))
     const score = mentioned.length ? Math.round((matched.length / mentioned.length) * 100) : 0
 
-    return { mentioned, matched, score }
+    return { mentioned, matched, missing, score }
   }, [description])
 
   return (
@@ -47,16 +50,25 @@ function JobMatchAnalyzer() {
         <div className="match-results">
           <div className="match-score">
             <strong>{analysis.score}%</strong>
-            <span>skill match</span>
+            <span>tracked skill match</span>
           </div>
-          <div>
-            <h3>Skills found</h3>
-            {analysis.matched.length ? (
-              <div className="skill-tags">
-                {analysis.matched.map(([, label]) => <span key={label}>{label}</span>)}
-              </div>
-            ) : (
-              <p>No tracked frontend skills found yet. Try pasting the full posting.</p>
+          <div className="match-feedback">
+            <div>
+              <h3>Skills found</h3>
+              {analysis.matched.length ? (
+                <div className="skill-tags">
+                  {analysis.matched.map(([, label]) => <span key={label}>{label}</span>)}
+                </div>
+              ) : (
+                <p>No tracked frontend skills found yet. Try pasting the full posting.</p>
+              )}
+            </div>
+            {analysis.mentioned.length > 0 && (
+              <p className="match-note">
+                {analysis.missing.length === 0
+                  ? 'The tracked requirements in this posting align with your current frontend skill set.'
+                  : `${analysis.missing.length} tracked requirement${analysis.missing.length === 1 ? '' : 's'} may need more review.`}
+              </p>
             )}
           </div>
         </div>
