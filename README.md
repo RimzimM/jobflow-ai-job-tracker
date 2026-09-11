@@ -35,10 +35,16 @@ Create a production build with:
 npm run build
 ```
 
-## Project notes
+## How it works
 
-JobFlow is currently frontend-only, so application data stays in the browser where it was created. The job match tool also runs locally and does not require an API key.
+Applications are stored in `localStorage`, so edits, notes, statuses and follow-up dates remain available after a refresh in the same browser. Dashboard metrics are derived from the saved application data.
+
+The job match tool runs in the browser and checks a pasted job description for relevant frontend skills. It provides a quick match score and feedback without sending the description to an external AI service or requiring an API key.
 
 ## Deployment
 
-The app is ready to deploy as a Vite project. Use `npm run build` as the build command and `dist` as the output directory.
+JobFlow is configured for Vercel as a Vite single-page application. The production build uses `npm run build` and outputs to `dist`. The included Vercel rewrite keeps client-side routes working when a page is opened or refreshed directly.
+
+## Current scope
+
+This version is intentionally frontend-only. Authentication, cloud sync and a server-backed database are possible future additions, but are not required for the current portfolio build.
